@@ -28,11 +28,11 @@ Please only run the `./env/vars.sh` script from within the top-level
 `ishmem_demo` directory.
 
 After installation is complete and the environment is loaded, try running an
-example. In the "example" directory is a self-contained complete ISHMEM
-project:
+example. In the "examples" directory is a self-contained complete ISHMEM
+project containing several small example programs:
 
 ```
-cd example
+cd examples
 mkdir build
 cd build
 cmake ..
