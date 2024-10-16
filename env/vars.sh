@@ -9,8 +9,13 @@ module unload mpich
 module load cmake
 
 if [[ -z ${BASE} ]]; then
-    SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-    export BASE=${SCRIPT_DIR}/../ishmem_workspace/$(git rev-parse --abbrev-ref HEAD)
+    THIS_DIR=$(pwd)
+    if [ "$(basename ${THIS_DIR})" = "ishmem_demo" ]; then
+    else
+        echo "\nWARNING! This directory name is not 'ishmem_demo'"
+        echo "           please run from top-level project directory\n"
+    fi
+    export BASE=${THIS_DIR}/ishmem_workspace/$(git rev-parse --abbrev-ref HEAD)
     echo "BASE env var is unset, workspace directory set to ${BASE}"
 else
     export BASE=${BASE}

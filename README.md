@@ -1,6 +1,6 @@
 # ishmem_demo
 
-To build Intel SHMEM v1.1.0, run:
+To build Intel SHMEM v1.1.0, run the following commands:
 
 ```
 unset BASE
@@ -8,32 +8,35 @@ unset BASE
 ```
 
 This will create an `ishmem_workspace` directory in the current working
-directory. The workspace is within another directory corresponding to the Git
-branch name. The default branch is `main`, which targets the Sunspot system at
-Argonne National Lab. An alternative location for the workspace directory can
-be set with env var $BASE. Please run the `install_ishmem.sh` script from
-within the top-level `ishmem_demo` directory.
+directory. The workspace is placed within another directory corresponding to
+the Git branch name. The default branch is `main`, which targets the Sunspot
+system at the Argonne Leadership Computing Facility.
 
-After installation is complete, try running an example. In the "example"
-directory is a self-contained complete ISHMEM project:
+An alternative location for the workspace directory can be set with environment
+variabale, BASE.
 
-```
-cd example
-mkdir build
-cd build
-cmake .. -DISHMEM_INSTALL_PREFIX=${ISHMEM_ROOT}
-```
+Please only run the `install_ishmem.sh` script from within the top-level
+`ishmem_demo` directory.
 
-To revive the ISHMEM environment quickly, for example, in a new terminal
-session:
+To setup the ISHMEM environment for execution, run:
 
 ```
 source ./env/vars.sh
 ```
 
-That script is also invoked by `./install_ishmem.sh`
-Please run the `vars.sh` script from within the top-level `ishmem_demo`
-directory.
+Please only run the `./env/vars.sh` script from within the top-level
+`ishmem_demo` directory.
+
+After installation is complete and the environment is loaded, try running an
+example. In the "example" directory is a self-contained complete ISHMEM
+project:
+
+```
+cd example
+mkdir build
+cd build
+cmake ..
+```
 
 To start an interactive job on a single Sunspot node:
 

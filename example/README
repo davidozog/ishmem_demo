@@ -1,8 +1,0 @@
-This is a bare-bones example of a CMake project linking with Intel SHMEM on Sunspot
-
-Build instructions:
-
-$ source ../env/vars.sh
-$ mkdir build
-$ cd build
-$ cmake .. -DISHMEM_ROOT=$HOME/sc24_demos/ishmem_workspace/sunspot/install/ishmem
