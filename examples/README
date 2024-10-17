@@ -1,0 +1,5 @@
+Each file with a .cpp extension is a self-contained Intel SHMEM program.
+
+The programs are commented throughout to introduce API concepts and best practices.
+
+See the top-level README file for more information.
