@@ -1,6 +1,6 @@
-# ishmem_demo
+# Intel® SHMEM Demo
 
-To build Intel SHMEM v1.1.0, run the following commands:
+To build Intel® SHMEM v1.1.0, run the following commands:
 
 ```
 unset BASE

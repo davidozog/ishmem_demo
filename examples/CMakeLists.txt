@@ -1,5 +1,7 @@
+# Copyright (C) 2024 Intel Corporation                                                                                                                                                                                                      # SPDX-License-Identifier: BSD-3-Clause
+
 cmake_minimum_required(VERSION 3.16)
-cmake_policy(SET CMP0144 NEW)
+cmake_policy(SET CMP0144 NEW) # look for ISHMEM_ROOT
 
 project(ISHMEM_tutorial)
 
