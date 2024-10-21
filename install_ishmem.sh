@@ -3,12 +3,6 @@
 # Copyright (C) 2024 Intel Corporation
 # SPDX-License-Identifier: BSD-3-Clause
 
-export HTTP_PROXY=http://proxy.alcf.anl.gov:3128
-export HTTPS_PROXY=http://proxy.alcf.anl.gov:3128
-export http_proxy=http://proxy.alcf.anl.gov:3128
-export https_proxy=http://proxy.alcf.anl.gov:3128
-git config --global http.proxy http://proxy.alcf.anl.gov:3128
-
 # Sets BASE env var if unset:
 if [[ -f ${PWD}/env/vars.sh ]]; then
     source ${PWD}/env/vars.sh
@@ -44,17 +38,49 @@ else
     new_workspace="y"
 fi
 
-#Clone/Build SOS
+#Clone/Build OFI
 cd ${BASE}
-if [[ "$new_workspace" == "y" ]]; then
-    git clone --recurse-submodules https://github.com/Sandia-OpenSHMEM/SOS.git sos
-fi
-cd sos
+git clone https://github.com/ofiwg/libfabric.git
+cd libfabric
+git checkout ${LIBFABRIC_BRANCH}
 ./autogen.sh
 mkdir build
 cd build
-../configure --prefix=${SHMEM_DIR} --with-ofi=${OFI_PREFIX} --with-pmi=${PMI_PREFIX} --disable-fortran --enable-ofi-mr=basic --enable-ofi-manual-progress --disable-libtool-wrapper --disable-bounce-buffers --enable-mr-endpoint --enable-ofi-hmem --disable-ofi-inject --disable-nonfetch-amo --enable-manual-progress CC=icx CXX=icpx
+../configure --prefix=${OFI_PREFIX} --with-ze=${L0_PREFIX} --with-dlopen=no
+make -j
+make install
+
+#Clone/Build SOS
+cd ${BASE}
+if [[ "$new_workspace" == "y" ]]; then
+    git clone --recurse-submodules https://github.com/davidozog/SOS.git sos
+fi
+cd sos
+git checkout ${SOS_BRANCH}
+./autogen.sh
+mkdir build
+cd build
+../configure --prefix=${SHMEM_DIR} --with-ofi=${OFI_PREFIX} --enable-pmi-simple --disable-fortran --enable-ofi-mr=basic --enable-hard-polling --disable-bounce-buffers --enable-ofi-hmem --disable-ofi-inject --enable-mmap CC=icx CXX=icpx
 make -j32
+make install
+
+#Download and install CMake:
+cd ${BASE}
+wget https://github.com/Kitware/CMake/releases/download/v3.30.4/cmake-3.30.4-linux-x86_64.tar.gz
+tar xzf cmake-3.30.4-linux-x86_64.tar.gz
+mkdir install
+mv cmake-3.30.4-linux-x86_64 install
+export PATH=${PWD}/install/cmake-3.30.4-linux-x86_64/bin:$PATH
+
+#Clone/Build Level Zero
+cd ${BASE}
+git clone https://github.com/oneapi-src/level-zero.git
+cd level-zero
+git checkout $LEVEL_ZERO_BRANCH
+mkdir build
+cd build
+cmake -D CMAKE_INSTALL_PREFIX=${L0_PREFIX} ..
+make -j
 make install
 
 #Clone/Build ISHMEM
@@ -65,6 +91,6 @@ fi
 cd ishmem
 mkdir build
 cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=${ISHMEM_ROOT} -DCMAKE_BUILD_TYPE=Release -DENABLE_OPENSHMEM=ON -DSHMEM_INSTALL_PREFIX=${SHMEM_DIR} -DL0_INSTALL_PREFIX=${L0_PREFIX} -DBUILD_TEST=NO -DBUILD_PERF_TEST=YES
+cmake .. -DCMAKE_INSTALL_PREFIX=${ISHMEM_ROOT} -DCMAKE_BUILD_TYPE=Release -DENABLE_OPENSHMEM=ON -DSHMEM_INSTALL_PREFIX=${SHMEM_DIR} -DL0_INSTALL_PREFIX=${L0_PREFIX} -DBUILD_TEST=NO -DBUILD_PERF_TEST=YES -DCTEST_SCHEDULER=mpi
 make -j32
 make install

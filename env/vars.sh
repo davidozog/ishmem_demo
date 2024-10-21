@@ -3,10 +3,7 @@
 # Copyright (C) 2024 Intel Corporation
 # SPDX-License-Identifier: BSD-3-Clause
 
-module purge
-module reset
-module unload mpich
-module load cmake
+source /opt/intel/oneapi/setvars.sh --force
 
 if [[ -z ${BASE} ]]; then
     THIS_DIR=$(pwd)
@@ -22,18 +19,19 @@ else
 fi
 
 #Set environment variables
+export SOS_BRANCH=nomerge/mmap
 export SHMEM_DIR=${BASE}/install/sos
 export ISHMEM_ROOT=${BASE}/install/ishmem
 export SHMEM_INSTALL_PREFIX=${SHMEM_DIR}
 export PMI_MAX_KVS_ENTRIES=1000000
-export FI_PROVIDER=cxi
+export FI_PROVIDER="verbs;ofi_rxm"
 export FI_CXI_OPTIMIZED_MRS=0
 export FI_CXI_DEFAULT_CQ_SIZE=131072
 export EnableImplicitScaling=0
 export SYCL_DEVICE_FILTER=:gpu
-export OFI_PREFIX=/opt/cray/libfabric/1.15.2.0
-export L0_PREFIX=/opt/aurora/24.086.0/intel-gpu-umd/821.36
-export PMI_PREFIX=/opt/cray/pe/pmi/6.1.9
+export LIBFABRIC_BRANCH=v1.22.0
+export OFI_PREFIX=${BASE}/install/libfabric
+export L0_PREFIX=${BASE}/install/level-zero
 
 #Set path and library path:
 export PATH=${SHMEM_DIR}/bin:${ISHMEM_ROOT}/bin:$PATH
